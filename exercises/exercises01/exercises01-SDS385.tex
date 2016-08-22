@@ -131,6 +131,10 @@ in your expression.
 
 Some notes here:
 \begin{enumerate}[1.]
+\item You can handle the intercept/offset term by either adding a column of 1's to the feature matrix $X$, or by explicitly introducing an intercept into the linear predictor and handling the intercept and regression coefficients separately, i.e.
+$$
+w_i(\beta) =  \frac{1}{1 + \exp\{-(\alpha + x_i^T \beta )\}} \, .
+$$
 \item I strongly recommend that you write a self-contained function that, for given values of $\beta$, $y$, $X$, and sample sizes $m_i$ (which for the WDBC data are all 1), will calculate the gradient of $l(\beta)$.  Your gradient-descent optimizer will then call this function.  Modular code is reusable code.
 \item Make sure that, at every iteration of gradient descent, you compute and store the current value of the log likelihood, so that you can track and plot the convergence of the algorithm.
 \item Be sensitive to the numerical consequences of an estimated success probability that is either very near 0, or very near 1.
@@ -144,7 +148,7 @@ q(\beta; \beta_0) = \frac{1}{2}(z - X \beta)^T W (z - X \beta) + c\, ,
 $$
 where $z$ is a vector of ``working responses'' and $W$ is a diagonal matrix of ``working weights,'' and $c$ is a constant that doesn't involve $\beta$.  Give explicit expressions for the diagonal elements $W_{ii}$ and for $z_i$ (which will necessarily involve the point $\beta_0$, around which you're doing the expansion).\footnote{Remember the trick of completing the square, e.g.~\url{https://justindomke.wordpress.com/completing-the-square-in-n-dimensions/}.}
 
-\item Read up on Newton's method in Nocedal and Wright, Chapter 2.  Implement it and test it out on the same data set you just used to test out gradient descent.\footnote{You should be able to use your own solver for linear systems from the first section.}  Note: while you could do line search, there is a ``natural'' step size of 1 in Newton's method.
+\item Read up on Newton's method in Nocedal and Wright, Chapter 2.  Implement it for the logit model and test it out on the same data set you just used to test out gradient descent.\footnote{You should be able to use your own solver for linear systems from the first section.}  Note: while you could do line search, there is a ``natural'' step size of 1 in Newton's method.
 
 \item Reflect broadly on the tradeoffs inherent in the decision of whether to use gradient descent or Newton's method for solving a logistic-regression problem.
 
