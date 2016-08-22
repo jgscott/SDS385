@@ -66,3 +66,18 @@ If you take option 4, you should turn in your own project.
 3) Optional, but recommended: bring your own data!  
 
 
+## Topics
+
+Here's a partial list of topics that we'll cover.   
+
+- Big regression models  
+- Regularization and sparsity in statistical models  
+- Enough convex optimization to be dangerous  
+- Online learning  
+- The importance of multiplicity considerations (multiple comparisons, multiple testing) in big-data analysis  
+- Matrix factorization and its applications (e.g. recommender systems, modeling covariance matrices)    
+- Modeling non-numerical (e.g. binary/ordinal/text) data  
+- Latent-variable models at scale  
+- Resampling-based methods at scale  
+- Big spatial models  
+
