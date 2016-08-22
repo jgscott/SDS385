@@ -31,3 +31,7 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+exercises/exercises01/exercises01-SDS385.aux
+exercises/exercises01/exercises01-SDS385.log
+exercises/exercises01/exercises01-SDS385.out
+exercises/exercises01/exercises01-SDS385.synctex.gz

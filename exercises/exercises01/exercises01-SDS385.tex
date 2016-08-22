@@ -1,0 +1,161 @@
+  \documentclass{mynotes}
+
+%\geometry{showframe}% for debugging purposes -- displays the margins
+
+\newcommand{\E}{\mbox{E}}
+
+\usepackage{amsmath}
+%\usepackage[garamond]{mathdesign}
+\usepackage{url}
+
+% Set up the images/graphics package
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\title[Exercises 1 $\cdot$ SDS 385]{Exercises 1: Preliminaries}
+%\author[ ]{ }
+\date{}  % if the \date{} command is left out, the current date will be used
+
+% The following package makes prettier tables.  We're all about the bling!
+\usepackage{booktabs}
+
+% The units package provides nice, non-stacked fractions and better spacing
+% for units.
+\usepackage{units}
+
+% The fancyvrb package lets us customize the formatting of verbatim
+% environments.  We use a slightly smaller font.
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+
+% Small sections of multiple columns
+\usepackage{multicol}
+
+% Provides paragraphs of dummy text
+\usepackage{lipsum}
+
+% These commands are used to pretty-print LaTeX commands
+\newcommand{\doccmd}[1]{\texttt{\textbackslash#1}}% command name -- adds backslash automatically
+\newcommand{\docopt}[1]{\ensuremath{\langle}\textrm{\textit{#1}}\ensuremath{\rangle}}% optional command argument
+\newcommand{\docarg}[1]{\textrm{\textit{#1}}}% (required) command argument
+\newenvironment{docspec}{\begin{quote}\noindent}{\end{quote}}% command specification environment
+\newcommand{\docenv}[1]{\textsf{#1}}% environment name
+\newcommand{\docpkg}[1]{\texttt{#1}}% package name
+\newcommand{\doccls}[1]{\texttt{#1}}% document class name
+\newcommand{\docclsopt}[1]{\texttt{#1}}% document class option name
+
+\newcommand{\N}{\mbox{N}}
+\newcommand{\thetahat}{\hat{\theta}}
+\newcommand{\sigmahat}{\hat{\sigma}}
+\newcommand{\betahat}{\hat{\beta}}
+
+
+\begin{document}
+
+\maketitle% this prints the handout title, author, and date
+
+\section{Linear regression}
+
+Consider the simple linear regression model
+$$
+y = X \beta + e \, ,
+$$
+where $y = (y_1, \ldots, y_N)$ is an $N$-vector of responses, $X$ is an $N \times P$ matrix of features whose $i$th row is $x_i$, and $e$ is a vector of model residuals.  The goal is to estimate $\beta$, the unknown $P$-vector of regression coefficients.  
+
+Let's say you trust the precision of some observations more than others, and therefore decide to estimate $\beta$ by the principle of weighted least squares (WLS):
+$$
+\hat{\beta} = \arg \min_{\beta \in \mathcal{R}^P} \sum_{i=1}^N \frac{w_i}{2}(y_i - x_i^T \beta)^2 \, ,
+$$
+where $w_i$ is the weight for observation $i$.  (Higher weight means more influence on the answer; the factor of 1/2 is just for convenience, as you'll see later.)
+
+\begin{enumerate}[(A)]
+
+\item Rewrite the WLS objective function\footnote{That is, the thing to be minimized.} above in terms of vectors and matrices, and show that $\hat \beta$ is the solution to the following linear system of $P$ equations in $P$ unknowns:
+$$
+(X^T W X) \hat \beta = X^T W y \, ,
+$$
+where $W$ is the diagonal matrix of weights.
+
+\item One way to calculate $\hat{\beta}$ is to: (1) recognize that, trivially, the solution to the above linear system must satisfy $\hat \beta = (X^T W X)^{-1} X^T W y$; and (2) to calculate this directly, i.e.~by inverting $X^T W X$.  Let's call this the ``inversion method'' for calculating the WLS solution.
+
+Numerically speaking, is the inversion method the fastest and most stable way to actually solve the above linear system?  Do some independent sleuthing on this question.  Summarize what you find, and provide pseudo-code for at least one alternate method based on matrix factorizations---call it ``your method'' for short.  (Note: our linear system is not a special flower; whatever you discover about general linear systems should apply here.)
+
+\item Code up functions that implement both the inversion method and your method for an arbitrary $X$, $y$, and weights $W$.  Obviously you shouldn't write your own linear algebra routines for doing things like multiplying or decomposing matrices, but don't use a direct model-fitting function like R's ``lm'' either.   Your actual code should look a lot like the pseudo-code you wrote for the previous part.  Note: be attentive to how you multiply a matrix by a diagonal matrix, or you'll waste a lot of time multiplying stuff by zero.
+
+Now simulate some silly data from the linear model for a range of values of $N$ and $P$.  (Feel free to assume that the weights $w_i$ are all 1.)  It doesn't matter how you do this---e.g.~everything can be Gaussian if you want.  (We're not concerned with statistical principles yet, just with algorithms, and using least squares is a pretty terrible idea for enormous linear models, anyway.)  Just make sure that you explore values of $P$ up into the thousands, and that $N > P$.  Benchmark the performance of the inversion solver and your solver across a range of scenarios.  (In R, a simple library for this purpose is microbenchmark.)
+
+\item Now what happens if $X$ is a highly sparse matrix, in the sense that most entries are zero?  Ideally we'd realize some savings by not doing a whole bunch of needless multiplication by zero in our code.
+
+It's easy to simulate an $X$ matrix that looks like this.  A quick-and-dirty way is to simulate a mask of zeros and ones (but mostly zeros), and then do pointwise multiplication with your original feature matrix.  For example:
+\begin{verbatim}
+N = 2000
+P = 500
+X = matrix(rnorm(N*P), nrow=N)
+mask = matrix(rbinom(N*P,1,0.05), nrow=N)
+X = mask*X
+X[1:10, 1:10]  # quick visual check
+\end{verbatim}
+
+Again assume that the weights $w_i$ are all 1.  Repeat the previous benchmarking exercise with this new recipe for simulating a sparse $X$, except add another solver to the mix: one that can solve a linear system $Ax = b$ in a way that exploits the sparsity of A.  To do this, you'll need to actually represent the feature matrix $X$ in a sparse format, and then call the appropriate routines  for that format.  (Again, do some sleuthing; in R, the Matrix library has data structures and functions that can do this; SciPy will have an equivalent.)
+
+Benchmark the inversion method, your method, and the sparse method across some different scenarios (including different sparsity levels in $X$, e.g. 5\% dense in my code above).
+\end{enumerate}
+
+
+\section{Generalized linear models}
+
+As an archetypal case of a GLM, we'll consider the binomial logistic regression model: $y_i \sim \mbox{Binomial}(m_i, w_i)$, where $y_i$ in an integer number of ``successes,'' $m_i$ is the number of trials for the $i$th case, and the success probability $w_i$ is a regression on a feature vector $x_i$ given by the inverse logit transform:
+$$
+w_i = \frac{1}{1 + \exp\{-x_i^T \beta\}} \, .
+$$
+We want to estimate $\beta$ by the principle of maximum likelihood.  Note: for binary logistic regression, $m_i = 1$ and $y_i$ is either 0 or 1.
+
+As an aside, if you have a favorite data set or problem that involves a different GLM---say, a Poisson regression for count data---then feel free to work with that model instead throughout this entire section.  The fact that we're working with a logistic regression isn't essential here; any GLM will do.
+
+\begin{enumerate}[(A)]
+\item Start by writing out the negative log likelihood,
+$$
+l(\beta) = - \log \left \{ \prod_{i=1}^N p(y_i \mid \beta) \right \} \, .
+$$
+Simplify your expression as much as possible. This is the thing we want to minimize to compute the MLE.  (By longstanding convention, we phrase optimization problems as minimization problems.)
+
+Derive the gradient of this expression, $\nabla l(\beta)$.   Note: your gradient will be a sum of terms $l_i(\beta)$, and it's OK to use the shorthand
+$$
+w_i(\beta) =  \frac{1}{1 + \exp\{-x_i^T \beta\}}
+$$
+in your expression.
+
+
+\item Read up on the method of steepest descent, i.e.~gradient descent, in Nocedal and Wright (see course website).  Write your own function that will fit a logistic regression model by gradient descent.  Grab the data ``wdbc.csv'' from the course website, or obtain some other real data that interests you, and test it out.  The WDBC file has information on 569 breast-cancer patients from a study done in Wisconsin.  The first column is a patient ID, the second column is a classification of a breast cell (Malignant or Benign), and the next 30 columns are measurements computed from a digitized image of the cell nucleus.  These are things like radius, smoothness, etc.  For this problem, use the first 10 features for $X$, i.e.~columns 3-12 of the file.  If you use all 30 features you'll run into trouble.
+
+Some notes here:
+\begin{enumerate}[1.]
+\item I strongly recommend that you write a self-contained function that, for given values of $\beta$, $y$, $X$, and sample sizes $m_i$ (which for the WDBC data are all 1), will calculate the gradient of $l(\beta)$.  Your gradient-descent optimizer will then call this function.  Modular code is reusable code.
+\item Make sure that, at every iteration of gradient descent, you compute and store the current value of the log likelihood, so that you can track and plot the convergence of the algorithm.
+\item Be sensitive to the numerical consequences of an estimated success probability that is either very near 0, or very near 1.
+\item Finally, you can be as clever as you want about the gradient-descent step size.  Small step sizes will be more robust but slower; larger step sizes can be faster but may overshoot and diverge; step sizes based on line search (Chapter 3 of Nocedal and Wright) are cool but involve some extra work.
+\end{enumerate}
+
+
+\item Now consider a point $\beta_0 \in \mathcal{R}^P$, which serves as an intermediate guess for our vector of regression coefficients.  Show that the second-order Taylor approximation of $l(\beta)$, around the point $\beta_0$, takes the form
+$$
+q(\beta; \beta_0) = \frac{1}{2}(z - X \beta)^T W (z - X \beta) \, ,
+$$
+where $z$ is a vector of ``working responses'' and $W$ is a diagonal matrix of ``working weights.''  Give explicit expressions for the diagonal elements $W_{ii}$ and for $z_i$ (which will necessarily involve the point $\beta_0$, around which you're doing the expansion).
+
+\item Read up on Newton's method in Nocedal and Wright, Chapter 2.  Implement it and test it out on the same data set you just used to test out gradient descent.\footnote{You should be able to use your own solver for linear systems from the first section.}  Note: while you could do line search, there is a ``natural'' step size of 1 in Newton's method.
+
+\item Reflect broadly on the tradeoffs inherent in the decision of whether to use gradient descent or Newton's method for solving a logistic-regression problem.
+
+
+
+
+\end{enumerate}
+
+
+\end{document}
+
+
+
+
