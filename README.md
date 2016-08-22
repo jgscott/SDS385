@@ -14,7 +14,7 @@ Some course logistics
 
 ## About the course
 
-This is a [Moore-method](https://en.wikipedia.org/wiki/Moore_method) course.  There are no regular lectures.  You will work on the [exercises outside of class](exercises/).  When you come to class, you will share what you've done, and benefit from understanding what others have done.  There's nothing else to it.  It's a brilliant way to learn!
+This is a [Moore-method](https://en.wikipedia.org/wiki/Moore_method) course.  There are no regular lectures.  You will work on the [exercises outside of class](exercises/).  When you come to class, you will share what you've done, and benefit from understanding what others have done.  There's nothing else to it.  We will end up covering less than in a traditional lecture-based course.  But what you learn, you will learn very deeply.  The trade-off is more than worth it.   
 
 While the course is much more about methods and applications than about theory, we will need a fair bit of (not-too-hard) math.  To that end, I assume that you know the following topics well:  
 - linear algebra  
