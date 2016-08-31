@@ -93,7 +93,7 @@ The answers are: 1) pretty darn random, and 2) so that we only ever have to touc
 $$
 \begin{aligned}
 \nabla l(\beta) &=  \sum_{i=1}^n g_i(\beta)  \\
-g_i(\beta) &= (y_i - \hat{y}_i) x_i \\
+g_i(\beta) &= (\hat y_i - y_i) x_i \\
 \hat{y}_i &= E(y_i \mid \beta) = m_i \cdot w_i(\beta) = m_i \cdot \frac{1}{1 + \exp(-x_i^T \beta)} \, .
 \end{aligned}
 $$

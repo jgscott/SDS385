@@ -37,10 +37,6 @@ chol_solver = function(y,X) {
 	return(betahat)
 }
 
-# # inversion_solver(y,X)
-# qr_solver(y,X)
-# chol_solver(y,X)
-
 
 microbenchmark(
 	inversion_solver(y,X),
