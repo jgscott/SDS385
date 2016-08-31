@@ -142,7 +142,7 @@ Implement the Robbins-Monro rule in your SGD code. Pick a smallish $t_0$ (1 or 2
 
 \item Finally, try the following averaging approach.  Keep the updating scheme exactly as before.  But now, instead of reporting the iterates $\beta^{(t)}$, report the time-averaged iterates
 $$
-\bar{\beta}^{(t)} = \frac{1}{t} \sum_{k=0}^{t-1} \beta^{(t)} \, .
+\bar{\beta}^{(t)} = \frac{1}{t} \sum_{k=0}^{t-1} \beta^{(k)} \, .
 $$
 To be clear: you don't use this formula to actually compute the updates, which are exactly the same as before.  You merely use it to report the final answer, and to track the log-likelihood of the intermediate answers as the algorithm proceeds.  Moreover, you might want to start this averaging after an initial burn-in period.
 
