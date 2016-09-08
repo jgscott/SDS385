@@ -12,6 +12,11 @@ Some course logistics
 
 [You can find all the exercises here.](exercises/)  I'll post them as they become relevant throughout the semester.
 
+## Peer evaluation  
+
+For the purpose of peer evaluation, you can find links [to people's GitHub pages here](team/).  
+
+
 ## About the course
 
 This is a [Moore-method](https://en.wikipedia.org/wiki/Moore_method) course.  There are no regular lectures.  You will work on the [exercises outside of class](exercises/).  When you come to class, you will share what you've done, and benefit from understanding what others have done.  There's nothing else to it.  We will end up covering less than in a traditional lecture-based course.  But what you learn, you will learn very deeply.  The trade-off is more than worth it.   
