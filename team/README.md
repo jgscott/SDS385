@@ -9,6 +9,7 @@ Here are links to the GitHub pages of folks in the course.  This will facilitate
 - [Amelia Henriksen](https://github.com/aamcbee/SDS385)
 - [Devon Humphries](https://github.com/devonhum)
 - [Josh Kelle](https://github.com/JKelle)  
+- [Haris Krijestorac](https://github.com/hariskr)
 - [Kai Liu](https://github.com/KaiUT)  
 - [Yixuan Liu](https://github.com/Yixuancp)
 - [Evan Ott](https://github.com/eaott/sds385)  
