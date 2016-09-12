@@ -17,6 +17,7 @@ Here are links to the GitHub pages of folks in the course.  This will facilitate
 - [Raghav Shroff](https://github.com/raghavshroff)  
 - [Kevin Song](https://github.com/chipbuster/SDS385)  
 - [Jennifer Starling](https://github.com/jstarling1/bigdata)  
+- [Charles Tanguy](https://github.com/Charlestng)  
 - [Matteo Vestrucci](github.com/MatteoSDS/)  
 - [Mengjie Wang](https://github.com/iver3)  
 - [Spencer Woody](https://github.com/spencerwoody/SDS385)  
@@ -24,4 +25,5 @@ Here are links to the GitHub pages of folks in the course.  This will facilitate
 - [Dongguan You](https://github.com/u3503025/sds385)  
 - [Carlos Pagano Zanini](https://github.com/carlostpz)  
 - [Quan Zhang](https://github.com/zhangquan-ut/Big-Data)  
+- [Weiming Zhang](https://github.com/wdubw)  
 - [Yuxin Zhang](https://github.com/Yuxin-Zhang)  
