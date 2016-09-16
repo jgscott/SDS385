@@ -2,7 +2,25 @@
 
 [In these exercises](exercises04/exercises04-SDS385.pdf), you will work towards a solid, fast implementation of stochastic gradient descent, using one of two reasonably sophisticated ways of choosing the step size, and with support for sparse matrices.
 
-I suggest you build and debug your code on one of your smaller data sets from before.  But [here's the data set you'll be building up to at the end of the exercises.}(http://archive.ics.uci.edu/ml/datasets/URL+Reputation).  The goal here is to build a model that can detect malicious URLs in web traffic.  This data set has about 2.4 million observations and 3.2 million features, which isn't exactly Google-scale, but is big enough to cause serious problems with batch algorithms.  These features correspond to various lexical properties of the URL string, along with properties of the host and its IP address.  The outcome is whether the URL is malicious (coded 1) or not (coded -1).
+I suggest you build and debug your code on one of your smaller data sets from before.  But [here's the data set you'll be building up to at the end of the exercises.](http://archive.ics.uci.edu/ml/datasets/URL+Reputation).  The goal here is to build a model that can detect malicious URLs in web traffic.  This data set has about 2.4 million observations and 3.2 million features, which isn't exactly Google-scale, but is big enough to cause serious problems with batch algorithms.  These features correspond to various lexical properties of the URL string, along with properties of the host and its IP address.  The outcome is whether the URL is malicious (coded 1) or not (coded -1).
+
+### Data input
+
+The data are stored across multiple files in a format called [SVMlight](http://www.gabormelli.com/RKB/SVMlight_Learning_File_Format), which is a sparse matrix format that's pretty common in machine-learning applications.  I've provided you with an [R function](../R/read_svmlight_class.R) for reading in these files; it behaves a bit like read.csv or read.table.  Note: my implementation is in pure R, and provides a good overview of some of R's string manipulation capabilities.  It makes use of vectorized functions wherever possible, but a pure C++ implementation would no doubt be faster here.
+
+I've also a give you a [second R script](../R/process_urldata.R) that does three things:  
+1) processes all the .svm files   
+2) combines the files to form a single features matrix X and response vector Y (coded 0/1, rather than -1/+1)  
+3) spits out two binary files, `url_X.rds` and `url_Y.rds`.  
+
+You'll need to modify this script so that it points to the directory where you have saved the data (and the `read_svmlight_class.R` file, on which the script depends).  You'll also need the `Matrix` and `readr` packages.
+
+You can read about .rds files [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/readRDS.html).  The reason for step 3 is that reading data off disk is really slow, especially if that data is stored in some [ASCII-coded, text-based](https://www.cs.umd.edu/class/sum2003/cmsc311/Notes/BitOp/asciiBin.html) format like .csv (or like SVMlight).  However, if you read the data once and then store it as a binary (serialized) file, it's much faster to read in the second time.  For example, on my laptop, `process_urldata.R` takes more than 10 minutes to finish running.  But once the binary files have been created, they take only 10 seconds to load into memory again.  (See the [Stack Overflow question](http://stackoverflow.com/questions/11981434/file-operation-in-binary-vs-text-mode-performance-concern) here, for example, for some discussion of this point.)
+
+The ASCII-based formats are certainly more portable, so it's unlikely you'll ever want to delete them after processing.  But if you intend to read in a data set more than once, you can afford the duplicated storage, and data I/O is a limiting performance factor, then it often pays to store a binary copy of the data too.
+
+If you're working in Python, there are [handy functions](http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_svmlight_file.html) for reading in SVMlight files in scikit-learn.
+
 
 ### Links
 
@@ -23,20 +41,4 @@ Rcpp functions based on RcppEigen can read in R's sparse-matrix format (in the M
 Note: be sensitive to the format of your sparse matrix here.  It is much more efficient to loop column by column over a column-oriented sparse matrix.  Similarly, it is much more efficient to loop row by row over a row-oriented sparse matrix.
 
 
-### Data input
-
-The data are stored across multiple files in a format called [SVMlight](http://www.gabormelli.com/RKB/SVMlight_Learning_File_Format), which is a sparse matrix format that's pretty common in machine-learning applications.  I've provided you with an [R function](../R/read_svmlight_class.R) for reading in these files; it behaves a bit like read.csv or read.table.  Note: my implementation is in pure R, and provides a good overview of some of R's string manipulation capabilities.  It makes use of vectorized functions wherever possible, but a pure C++ implementation would no doubt be faster here.
-
-I've also a give you a [second R script](../R/process_urldata.R) that does three things:
-1) processes all the .svm files  
-2) combines the files to form a single features matrix X and response vector Y (coded 0/1, rather than -1/+1)
-3) spits out two binary files, `url_X.rds` and `url_Y.rds`.
-
-You'll need to modify this script so that it points to the directory where you have saved the data (and the `read_svmlight_class.R` file, on which the script depends).  You'll also need the `Matrix` and `readr` packages.
-
-You can read about .rds files [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/readRDS.html).  The reason for step 3 is that reading data off disk is really slow, especially if that data is stored in some [ASCII-coded, text-based](https://www.cs.umd.edu/class/sum2003/cmsc311/Notes/BitOp/asciiBin.html) format like .csv (or like SVMlight).  However, if you read the data once and then store it as a binary (serialized) file, it's much faster to read in the second time.  For example, on my laptop, `process_urldata.R` takes more than 10 minutes to finish running.  But once the binary files have been created, they take only 10 seconds to load into memory again.  (See the [Stack Overflow question](http://stackoverflow.com/questions/11981434/file-operation-in-binary-vs-text-mode-performance-concern) here, for example, for some discussion of this point.)
-
-The ASCII-based formats are certainly more portable, so it's unlikely you'll ever want to delete them after processing.  But if you intend to read in a data set more than once, you can afford the duplicated storage, and data I/O is a limiting performance factor, then it often pays to store a binary copy of the data too.
-
-If you're working in Python, there are [handy functions](http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_svmlight_file.html) for reading in SVMlight files in scikit-learn.
 
