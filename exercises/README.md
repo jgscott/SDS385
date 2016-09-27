@@ -58,11 +58,32 @@ The following papers treat some of the issues that arise in lasso regression in 
 - [Estimating prediction error](https://people.eecs.berkeley.edu/~jordan/sail/readings/archive/efron_Cp.pdf).  
 
 
-## Exercises 6: Algorithms that can handle sparsity
+## Exercises 6: the proximal gradient method
 
-The culmination of the first four exercises was _stochastic gradient descent_, which is one of the core algorithms that powers modern data science.  Over the next several sets of exercises, we will build up to another such core algorithm: ADMM, which stands for the _alternating direction method of multipliers._  It will take us several stages to build up to ADMM, and we're not there yet.  But ADMM is broadly useful for optimizing objective functions f(x) in statistics that have either or both of the following two features:  
+[Link here.](exercises06/exercises06.pdf)
+
+The culmination of the first four exercises was _stochastic gradient descent_, which is one of the core algorithms that powers modern data science.  Over the next few sets of exercises, we will build up to two other such core algorithms: the proximal gradient method, and ADMM, which stands for the _alternating direction method of multipliers._  These algorithms are broadly useful for optimizing objective functions f(x) in statistics that have either or both of the following two features:  
 - f(x) is a sum of two terms, one of which measures fit to the data, and the other of which penalizes model complexity.  
 - f(x) is not everywhere smooth, so that we cannot assume derivatives exist.  
 
 Both features come up in problems where we wish to impose sparsity on a parameter in a statistical model (i.e. the lasso of the previous exercises).  
+
+In this set of exercises, we begin our study of scalable algorithms that can handle sparsity, with the proximal gradient method.
+
+
+### Optional reading
+
+These exercises are fairly self contained.  Nonetheless, if you want a very detailed reference on the proximal gradient algorithm, and many related algorithms, I highly recommend [this review paper](http://web.stanford.edu/~boyd/papers/prox_algs.html) by Parikh and Boyd.
+
+
+## Exercises 7: Introduction to ADMM
+
+Link coming soon.
+
+### Reading
+
+In this set of exercises, there is a lot of reading.  The main reference is a review paper called [Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers](http://stanford.edu/~boyd/papers/admm_distr_stats.html), by Boyd et al.  This is a truly excellent review paper -- and a popular one, as its citation count on Google Scholar reveals.  For this set of exercises I ask that you read Sections 1-6 of this paper.
+
+You may or may not be familiar with some of the basic concepts in convex optimization used in the paper.  If you're not, you can find some very useful background material on Lagrangians and duality in Chapter 3.3 of [Convex Optimization](http://stanford.edu/~boyd/cvxbook/), by Boyd and Vandeberghe (see the Download link at the bottom).  
+
 
