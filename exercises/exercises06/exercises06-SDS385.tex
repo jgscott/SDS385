@@ -101,14 +101,15 @@ Derive the proximal operator (with parameter $\gamma$) of the linear approximati
 
 \item Many intermediate steps in statistical optimization problems can be written very compactly in terms of proximal operators of log-likelihoods or penalty functions.  For example, consider a negative log likelihood of the form
 $$
-l(x) = \frac{1}{2} x^{(t)} P x + q^{(t)} x + r \, .
+l(x) = \frac{1}{2} x^{T} P x - q^{T} x + r \, .
 $$
+Show that the proximal operator with parameter $1/\gamma$ of $l(x)$ takes the form
+$$
+\prox_{1/\gamma} l(x) = (P + \gamma I)^{-1} (\gamma  x + q) \, ,
+$$
+assuming the relevant inverse exists. 
 
-First, show that if we have a Gaussian sampling model of the form $(y \mid x) \sim \N(Ax, \Omega^{-1})$, then our negative log likelihood can be written in the form given above.  (Specify what $P$, $q$, and $r$ are.)  Then show that the proximal operator with parameter $1/\gamma$ of $l(x)$ takes the form
-$$
-\prox_{1/\gamma} l(x) = (P+\gamma A^{(t)} A)^{-1} (\gamma A^{(t)}  x - q) \, ,
-$$
-assuming the relevant inverse exists.  
+Then show that if we have a Gaussian sampling model of the form $(y \mid x) \sim \N(Ax, \Omega^{-1})$, then our negative log likelihood can be written in the form given above.  Here $A$ is like our feature matrix, $\Omega$ is a covariance matrix, and $x$ is like a regression vector.\footnote{This is notation from the optimization literature, rather than the stats literature.  It's important to be able to translate between both.}  Specify what $P$, $q$, and $r$ are for this negative log likelihood.
 
 \item  Let $\phi(x) = \tau \Vert x \Vert_1$.  Express the proximal operator of this function in terms of the soft-thresholding function that we learned about in the last set of exercises.  (An element-wise expression is fine.)
 
