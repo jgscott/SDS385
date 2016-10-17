@@ -82,7 +82,7 @@ These exercises are fairly self contained.  Nonetheless, if you want a very deta
 
 In this set of exercises, there is a lot of reading.  The main reference is a review paper called [Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers](http://stanford.edu/~boyd/papers/admm_distr_stats.html), by Boyd et al.  This is a truly excellent review paper -- and a popular one, as its citation count on Google Scholar reveals.  For this set of exercises I ask that you read Sections 1-6 of this paper.
 
-You may or may not be familiar with some of the basic concepts in convex optimization used in the paper.  If you're not, you can find some very useful background material on Lagrangians and duality in Chapter 3.3 of [Convex Optimization](http://stanford.edu/~boyd/cvxbook/), by Boyd and Vandeberghe (see the Download link at the bottom).  
+You may or may not be familiar with some of the basic concepts in convex optimization used in the paper.  If you're not, you can find some very useful background material on Lagrangians and duality in Chapter 5 (and for background, 3.3) of [Convex Optimization](http://stanford.edu/~boyd/cvxbook/), by Boyd and Vandeberghe (see the Download link at the bottom of this linked page).  
 
 ### Exercises
 
