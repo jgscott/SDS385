@@ -36,7 +36,7 @@ But as we'll see, getting stochastic-gradient descent right is tricky.  We'll le
 
 ## Exercises 5: Sparsity
 
-[Link here.](exercises05/exercises05.pdf)
+[Link here.](exercises05/exercises05-SDS385.pdf)
 
 In many problems, we wish to impose _sparsity_ on the parameters of a statistical model -- that is, the assumption that some parameters are zero.    In this set of exercises, we will learn a few basic ideas that are important for thinking about sparse statistical models at scale.
 
@@ -60,7 +60,7 @@ The following papers treat some of the issues that arise in lasso regression in 
 
 ## Exercises 6: the proximal gradient method
 
-[Link here.](exercises06/exercises06.pdf)
+[Link here.](exercises06/exercises06-SDS385.pdf)
 
 The culmination of the first four exercises was _stochastic gradient descent_, which is one of the core algorithms that powers modern data science.  Over the next few sets of exercises, we will build up to two other such core algorithms: the proximal gradient method, and ADMM, which stands for the _alternating direction method of multipliers._  These algorithms are broadly useful for optimizing objective functions f(x) in statistics that have either or both of the following two features:  
 - f(x) is a sum of two terms, one of which measures fit to the data, and the other of which penalizes model complexity.  
