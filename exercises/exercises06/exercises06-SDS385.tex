@@ -167,10 +167,13 @@ $$
 \begin{aligned}
 x^{(t+1)} &= \prox_{ \gamma^{(t)}} \phi(u^{(t)}) \, , \quad u^{(t)} =  z^{(t)} - \gamma^{(t)} \nabla l(z^{(t)})  \\
 s^{(t+1)} &= \frac{1 + (1 + 4 s_{t}^2)^{1/2}}{2} \\
-z^{(t+1)} &=  x^{(t)} + \left( \frac{s^{(t)} - 1}{s^{(t+1)}} \right) (x^{(t)} - x^{(t+1)}) \, .
+z^{(t+1)} &=  x^{(t+1)} + \left( \frac{s^{(t)} - 1}{s^{(t+1)}} \right) (x^{(t+1)} - x^{(t)}) \, .
 \end{aligned}
 $$
-The first step involves the proximal operator of the penalty function, evaluated not at the previous iterate $x^{(t)}$, but at an extrapolated version of $x^{(t)}$, based on the magnitude of the previous step's update $(x^{(t)} - x^{(t+1)})$.  In this sense, large steps give ``momentum'' to the next step, where the amount of momentum is modulated by the scalar $s^{(t)}$ terms.
+
+
+
+The first step involves the proximal operator of the penalty function, evaluated not at the previous iterate $x^{(t)}$, but at an extrapolated version of $x^{(t)}$, based on the magnitude of the previous step's update.  In this sense, large steps give ``momentum'' to the next step, where the amount of momentum is modulated by the scalar $s^{(t)}$ terms.
 
 Implement this acceleration scheme in your proximal gradient code, and compare its convergence speed to that of the unacceleration version.  Does the value of the objective goes down at each and every step?  Do you get to the minimum faster?
 
