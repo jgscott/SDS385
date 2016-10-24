@@ -1,0 +1,164 @@
+  \documentclass{mynotes}
+
+%\geometry{showframe}% for debugging purposes -- displays the margins
+
+\newcommand{\E}{\mbox{E}}
+
+\usepackage{amsmath}
+%\usepackage[garamond]{mathdesign}
+
+% Set up the images/graphics package
+\usepackage{graphicx}
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
+\graphicspath{{graphics/}}
+
+\title[Exercises 8 $\cdot$ SDS 385]{Exercises 8: Spatial smoothing at scale}
+%\author[ ]{ }
+\date{}  % if the \date{} command is left out, the current date will be used
+
+% The following package makes prettier tables.  We're all about the bling!
+\usepackage{booktabs}
+
+
+  \hypersetup{%
+    colorlinks=TRUE
+  }
+
+% The units package provides nice, non-stacked fractions and better spacing
+% for units.
+\usepackage{units}
+
+% The fancyvrb package lets us customize the formatting of verbatim
+% environments.  We use a slightly smaller font.
+\usepackage{fancyvrb}
+\fvset{fontsize=\normalsize}
+
+% Small sections of multiple columns
+\usepackage{multicol}
+
+% Provides paragraphs of dummy text
+\usepackage{lipsum}
+
+% These commands are used to pretty-print LaTeX commands
+\newcommand{\doccmd}[1]{\texttt{\textbackslash#1}}% command name -- adds backslash automatically
+\newcommand{\docopt}[1]{\ensuremath{\langle}\textrm{\textit{#1}}\ensuremath{\rangle}}% optional command argument
+\newcommand{\docarg}[1]{\textrm{\textit{#1}}}% (required) command argument
+\newenvironment{docspec}{\begin{quote}\noindent}{\end{quote}}% command specification environment
+\newcommand{\docenv}[1]{\textsf{#1}}% environment name
+\newcommand{\docpkg}[1]{\texttt{#1}}% package name
+\newcommand{\doccls}[1]{\texttt{#1}}% document class name
+\newcommand{\docclsopt}[1]{\texttt{#1}}% document class option name
+
+\newcommand{\N}{\mbox{N}}
+\newcommand{\thetahat}{\hat{\theta}}
+\newcommand{\sigmahat}{\hat{\sigma}}
+\newcommand{\betahat}{\hat{\beta}}
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+
+\maketitle% this prints the handout title, author, and date
+
+\bigskip
+
+
+In this set of exercises, we'll look at smoothing spatial data collected for discrete areal units.  In discrete spatial-smoothing problems, ``space'' is defined not by distance (like in Euclidean space), but by a neighborhood structure that says which areal units are close to which others.
+
+Specifically, let's say that we have observations $y_i$, each associated with a vertex $s_i \in \mathcal{S}$ in an undirected graph $\mathcal{G}$ with edge set $\mathcal{E}$.  The edge set tells you which sites are neighbors on the graph.  For example, in this set of exercises, we'll be looking at data from an fMRI experiment.  In this case, $s_i$ is the specific brain region (``voxel''), each $y_i$ is a measurement of the brain activity at that voxel, and $\mathcal{E}$ is the edge structure corresponding to a regular grid.
+
+The underlying statistical model is
+$$
+y_i = x_i + \epsilon_i \, , \quad i = 1, \ldots, n, 
+$$
+where $x_i$ is the true denoised signal, and $\epsilon_i$ is mean-zero error.  Our goal is to estimate $x_i$ in a way that leverages the assumption of spatial smoothness over the underlying graph.
+
+\section{Laplacian smoothing}
+
+Recall our discussion of Laplacian smoothing from class, which involved the following matrices defined with respect to the graph $\mathcal{G} = (\mathcal{S}, \mathcal{E})$:
+\begin{itemize}
+\item $A$, the graph adjacency matrix, which is a square $(0,1)$-valued matrix with zeros on its diagonal, and a 1 in entry $(i,j)$ if vertices $i$ and $j$ have an edge between them.
+\item $W$, the graph degree matrix, which is the diagonal matrix where $w_{ii}$ is the number of neighbors of vertex $i$.
+\item $L$, the Laplacian matrix, defined as $L = W - A$.
+\item $D$, the oriented edge matrix of the graph.   Letting $m = |\mathcal{E}|$ be the size of the edge set, $D$ is the $m \times n$ matrix defined as follows.  If $(j,k), j<k$ is the $i$th edge in $\mathcal{E}$, then the $i$th row of D has a $1$ in position $j$, a $-1$ in position $k$, and a $0$ everywhere else.  Thus the vector $D x$ encodes the set of pairwise first differences across the edges of the graph.
+\end{itemize}
+All of these are sparse matrices---although the graph determines how sparse.
+
+
+\begin{enumerate}[(A)]
+\item Consider the Laplacian smoothing problem:
+\begin{equation}
+\begin{aligned}
+& \underset{x \in \R^n}{\text{minimize}}
+& & 
+\frac{1}{2} \Vert y - x \Vert_2^2  + \frac{\lambda}{2} x^T L x \, ,
+\end{aligned}
+\end{equation}
+where $L$ is the graph Laplacian.  Show that the Laplacian matrix has the alternate representation $L = D^T D$, and therefore that penalty term $x^T L x$ can be rewritten as
+$$
+x^T L x = \Vert D x \Vert_2^2 \, .
+$$
+
+\item Show that the solution $\hat{x}$ of the Laplacian-smoothing objective solves a linear system
+$$
+C \hat{x} = b \, ,
+$$
+where $C$ and $b$ are matrices you name.
+
+\item Obtain the data ``fmri-z.csv'' from the class website.  This is a 128x128 cross-sectional slice of data from an fMRI experiment on spatial memory, from the laboratory of Russ Poldrack at Stanford University.  The data matrix reflects the underlying grid structure of the graph, i.e.~entry $(i,j)$ in the matrix corresponds to site $(i,j)$ on the grid.  Make a nice heatmap of the data so you can see the spatial structure.
+
+Now consider the following four algorithms for solving the above linear system:
+\begin{enumerate}[1.]
+\item a direct solver that uses a sparse matrix factorization (e.g.~sparse Cholesky or sparse LU) of the coefficient matrix $C$.
+\item the Gauss-Seidel method.
+\item the Jacobi iterative method.
+\item the conjugate gradient method.  (Specifically, the conjugate gradient method for solving linear systems.  There is also a nonlinear conjugate gradient method, which is not what you want.)
+\end{enumerate}
+
+You obviously known about the direct solver, but read up on the other three (all of which are iterative methods).  Nocedal and Wright have an extensive discussion of the conjugate-gradient method in their \textit{Numerical Optimization} book, while the other two are simple enough to be understood from their Wikipedia pages.
+
+Pick the direct solver (method 1) and any \textit{one} of the other three methods---whichever you think makes the most sense for the problem, in light of having read about them all.  Implement both these methods \textit{as efficiently as you can}, and use them both to solve the Laplacian smoothing problem for our fMRI data.  Make sure you get the same results from both methods, up to small numerical errors.  Compare them, both in terms of their speed and their ease of implementation.  For now, pick $\lambda$ by eye.  Show a nice picture of the raw data side by side with the denoised $\hat{x}$.
+
+I have given you an R function that constructs the oriented edge matrix $D$ for a two-dimensional grid of size $n_x \times n_y$.  You can find it in the file \verb|makeD2_sparse.R|.
+
+Also, you can implement all three iterative methods if you want!  Just do one iterative method at a minimum.
+
+%\section{Choosing $\lambda$}
+%
+%A sensible way to choose $\lambda$ is to minimize the generalized 
+
+\section{Graph fused lasso}
+
+Now consider a version of the spatial smoothing problem where we change the $\ell_2$ penalty to an $\ell_1$ penalty:
+\begin{equation}
+\begin{aligned}
+& \underset{x \in \R^n}{\text{minimize}}
+& & 
+\frac{1}{2} \Vert y - x \Vert_2^2  + \lambda \Vert D x\Vert_1 \, ,
+\end{aligned}
+\end{equation}
+where we recalled that $D$ is the oriented edge matrix of the graph defined earlier.  The penalty term rewards the solution for having small absolute first differences across the edges in the graph.  This is called the graph fused lasso, or graph-based total-variation denoising.
+
+Since this doesn't have a closed-form solution, we'll solve this problem via ADMM.  There is a fairly obvious ADMM approach, based on rewriting the problem as
+\begin{equation}
+\begin{aligned}
+& \underset{x \in \R^n}{\text{minimize}}
+& & 
+\frac{1}{2} \Vert y - x \Vert_2^2  + \lambda \Vert r \Vert_1 \\
+& \text{subject to}
+& & Dx = r \, .
+\end{aligned}
+\end{equation}
+
+However, this simple approach turns out to be a lot less efficient than the ADMM \href{https://arxiv.org/abs/1203.1828}{described in this paper.}  (Although I'm biased here, I think Wes Tansey's description in \href{https://arxiv.org/abs/1411.6144}{Section 5 of this paper} is much clearer.)  The more complex ADMM described in these references leads to more efficient updates that avoid the most expensive matrix operations of the ``simple'' approach.
+
+Feel free to pick either the ``simple and slow'' ADMM based on equation (3), or the better one described in either of these links.  Implement it, and compare the answer you get on the fMRI data to Laplacian smoothing.  Again, feel free to do something more clever here like cross-validation, but picking $\lambda$ by eye is fine here.
+
+Note: if you want to get \textit{really} clever, you can optionally use the ``proximal-stacking'' ADMM algorithm described \href{https://arxiv.org/abs/1411.0589}{in this paper}.  This will probably require a big investment of time on your part for understanding the approach, but it does lead to a state-of-the-art method for this problem that is \textit{much} faster than either of the algorithms described above.  (A related reference is \href{https://arxiv.org/abs/1505.06475}{this technical report;} in the case of a grid graph like we have here, the approach described here reduces to the Barbera/Sra technique.  I'm again biased here, but I think this paper is easier to understand.)
+
+\end{enumerate}
+
+\end{document}
+
+
+
+
