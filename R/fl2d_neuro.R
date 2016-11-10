@@ -7,7 +7,7 @@ zvec = as.numeric(fmri_z)
 image(Matrix(zvec, nrow=128, byrow=TRUE))
 
 # Run the 2D fused lasso using proximal stacking
-out = fl2d_stack(fmri_z, lambda = 1)
+out = fl2d_stack(fmri_z, lambda = 0.3)
 
 image(out$x)
 

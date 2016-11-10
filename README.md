@@ -86,3 +86,17 @@ Here's a partial list of topics that we'll cover.
 - Resampling-based methods at scale  
 - Big spatial models  
 
+## Miscellaneous links  
+
+### Graph-fused lasso    
+
+Here are a few items related to applications and generalizations of the graph-fused lasso.
+
+- [Slides from class on 11/9/2016](misc/class_version.pdf)  
+- [Linear-time solution of the 1D fused lasso](http://www.tandfonline.com/doi/abs/10.1080/10618600.2012.681238)    
+- [glmgen](https://github.com/statsmaths/glmgen) R package for fast fused lasso and trend-filtering code  
+- [Paper on trend filtering](https://arxiv.org/abs/1304.2986)  
+- [Fast ADMM for trend filtering](https://arxiv.org/abs/1406.2082)  
+- [Trend filtering on general graphs](https://arxiv.org/abs/1410.7690)  
+- [Multiscale spatial density smoothing](https://arxiv.org/abs/1507.07271)  
+- [False discovery rate smoothing](https://arxiv.org/abs/1411.6144)  

@@ -55,6 +55,8 @@ xhat = drop(solve(A, b, sparse=TRUE))
 image(Matrix(z, nrow=128, byrow=TRUE))
 image(Matrix(z_drop, nrow=128, byrow=TRUE))
 image(Matrix(xhat, nrow=128, byrow=TRUE))
+image(Matrix(mu, nrow=128, byrow=TRUE))
+
 
 # Compare fit
 plot(xhat, mu); abline(0,1)
