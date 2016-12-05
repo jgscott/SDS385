@@ -5,7 +5,8 @@ NMC = 1000
 out = foreach(i = 1:NMC, .combine='c') %do% {
 	mu = rnorm(N, 0, 2)
 	y = rnorm(N, mu, 1)
-	iN = which.max(y)
+	iN = which(rank(y) == 12)
+	# iN = 17
 	y[iN] - mu[iN]
 }
 mean(out)
@@ -14,8 +15,8 @@ hist(out, main=expression(y[(N)] - mu[i(N)])); abline(v=0)
 
 # Selection bias
 NMC = 1000
+mu = rnorm(N, 0, 2)
 out2 = foreach(i = 1:NMC, .combine='rbind') %do% {
-	mu = rnorm(N, 0, 2)
 	y = rnorm(N, mu, 1)
 	iN = which.max(y)
 	error_mle = y[iN] - mu[iN]
