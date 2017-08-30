@@ -36,6 +36,7 @@ for(i in seq(1, nx-filter_size, by=stride)) {
 }
 
 imageShow(out)
+dim(out)
 
 # How about a horizontal edge?
 beta_hori = matrix(-3, nrow=8, ncol=8)

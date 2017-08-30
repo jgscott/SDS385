@@ -22,7 +22,7 @@ The [exercises for this unit](exercises01/exercises01-SDS385.pdf) will have you 
 But as we'll see, getting stochastic-gradient descent right is tricky.  We'll learn the basics now, recognize the key issues, and save the more advanced stuff (for addressing those issues) for the next two sets of exercises.  
 
 
-## Exercises 3: Better online learning (preliminaries_
+<!-- ## Exercises 3: Better online learning (preliminaries_
 
 [The goal in this exercise](exercises03/exercises03-SDS385.pdf) is to set the stage for some big improvements to stochastic gradient descent.  To do so, we'll need to revisit our two batch optimizers from before: ordinary gradient descent, and Newton's method.  These exercises will have you implement backtracking line search and the BFGS method for logistic regression.  Both of these ideas will carry forward, with some modifications, to the online-learning setting.  
 
@@ -113,7 +113,7 @@ Readings for this week:
 - The paper ["A penalized matrix decomposition, with applications to sparse principal components and canonical correlation analysis"](https://faculty.washington.edu/dwitten/Papers/pmd.pdf), by Witten, Tibshirani, and Hastie.   
 - Optional: [more background](https://www.cs.cmu.edu/~venkatg/teaching/CStheory-infoage/book-chapter-4.pdf) on the singular value decomposition.  
 
-
+ -->
 
 
 
