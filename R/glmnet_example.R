@@ -15,7 +15,9 @@ X_train = as.matrix(prostate.train[,-12601])
 y_test = prostate.test[,12601]
 X_test = as.matrix(prostate.test[,-12601])
 
-# fit model with ridge penalty
+# fit model with ridge (l2) penalty
+# Logistic regression model (generalized linear model)
+# See ch 16 of basic notes from GitHub page
 glm1 = glmnet(X_train, y_train, family='binomial',
 	lambda = 10^seq(1, 4, length=50),
 	alpha=0)
