@@ -71,13 +71,12 @@ linesearch = function(X, Y, b, gr, p, m, maxalpha=1) {
 	# repeatedly shrink alpha if not met 
 	armijo = FALSE
 	alpha = maxalpha	/rho # This will try alpha = maxalpha first
+	dir_deriv = drop(crossprod(gr, p))
 	while(!armijo) {
 		alpha = rho*alpha
 		b_new = b + alpha*p
-		b_new_grad = logl_grad(X, Y, b_new, m)
 		phi = logl(X, Y, b, m)
 		phi_new = logl(X, Y, b_new, m)
-		dir_deriv = drop(crossprod(gr, p))
 		armijo = { phi_new < phi + c1*alpha*dir_deriv }
 	}
 	
@@ -154,7 +153,7 @@ quasi_newton = function(X, Y, m, maxiter=500, rel_tol=1e-6, verbose=0, lse=TRUE)
 			i = i+1
 		}
 	
-	} #End gradient descent iterations.
+	} #End quasi-newton descent iterations.
 		
 	betas = na.omit(betas)
 	loglik = na.omit(loglik)

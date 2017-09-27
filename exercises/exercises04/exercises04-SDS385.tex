@@ -64,30 +64,15 @@
 
 \section{Improving SGD for logistic regression}
 
-The two techniques we learned on the last set of exercises---line search and Quasi-Newton methods---give us inspiration for two different ways of picking the step size in stochastic gradient descent.
+The two techniques we learned on the last set of exercises---line search and Quasi-Newton methods---give us inspiration for how to pick the step size in stochastic gradient descent.
 
-\begin{enumerate}[(A)]
-
-\item First, return to your SGD code for logistic regression.  Implement the following variant on line search to pick the step size.
-\begin{enumerate}[1.]
-\item At some point during the learning, select a small subsample (a ``minibatch'') of the observations as a calibration set.
-\item Try out various step sizes $\gamma$ on this subsample (using the averaged gradient from this subsample as the search direction), and pick the $\gamma$ that leads to the best fit on the calibration set.
-\item Use this step size for awhile.
-\end{enumerate}
-You then repeat this every so often to refresh the step size, which will end up decaying naturally over time.
-
-Note: this way of choosing the step size based on a minibatch is \textit{almost} exactly the same as line search for regular gradient descent, treating that minibatch as the full data set.  The only difference is that the search direction vector is the \textit{average} gradient contribution for all the observations in the minibatch, rather than the sum of all gradient contributions.  These two vectors have the same direction but different length.  You need the one whose length scales like that of a single $g_t$ vector---and thus the average---to get the right step size for gradient-descent steps based on a single $g_t$.
-
-
-\item Now try the following approach, called AdaGrad (adaptive gradient descent).  You'll probably need an entirely different function for this, so you can benchmark this method against the line-search-based method.
-
-You'll remember that in the quasi-Newton method you implemented on the last exercises, your steps looked like this:
+Let's try the following approach, called AdaGrad (adaptive gradient descent).  You'll remember that in the quasi-Newton method you implemented on the last exercises, your steps looked like this:
 $$
 \beta^{(t+1)} = \beta^{(t)} - \gamma^{(t)} \Omega^{(t)} \nabla l(\beta^{(t)}) \, ,
 $$
 where:
 \begin{itemize}
-\item $\nabla l(\beta^{(t)})$ was the gradient vector, evaluated at the curren estimate.
+\item $\nabla l(\beta^{(t)})$ was the gradient vector, evaluated at the current estimate.
 \item $\Omega^{(t)}$ was an approximation to the inverse Hessian matrix, updated at each step according to the BFGS recursion.
 \item $\gamma^{(t)}$ was a scalar step-size parameter, chosen by line search.
 \end{itemize}
@@ -98,7 +83,7 @@ You could certainly imagine applying a similar idea to stochastic gradient desce
 \label{eqn:online_quasi_newton}
 \beta^{(t+1)} = \beta^{(t)} - \Omega^{(t)} g_t(\beta^{(t)}) \, ,
 \end{equation}
-where just as before, $g_t$ is the contribution to the gradient from the single data point processed at step $t$.  Here we've absorbed the step size into the matrix $\Omega^{(t)}$, which you should think of as exactly like the approximate inverse Hessian $\Omega^{(t)}$ that arises in quasi-Newton.
+where just as before, $g_t$ is the contribution to the gradient from the single data point processed at step $t$.  Here we've absorbed the step size into the matrix $\Omega^{(t)}$, which you should think of as exactly like the approximate inverse Hessian $\Omega^{(t)}$ that arises in quasi-Newton methods.
 
 However, this scheme suffers from two drawbacks.  First, if we use something like the BFGS update rule to update $\Omega^t$ using the $g_t$'s at each stage, we'll end up with a super noisy Hessian.  That's because our single-data-point observations are noisy, their gradient contributions are even noisier, and their Hessian contributions are noisier still.  The following R snippet will convince you of the general principle that noise accumulates very fast as you take higher-order finite differences of something noisy.
 \begin{verbatim}
@@ -133,21 +118,20 @@ The AdaGrad rule for tuning the SGD step size was originally proposed in a paper
 \end{itemize}
 And of course, Google is your friend.  Read up on AdaGrad and implement it.  How does it work for when used on one of your earlier, familiar data sets?
 
-\end{enumerate}
-
 
 \section{Putting it all together on some biggish data}
 
-By now you've got the ice cream for your SGD sundae.  Here are some sprinkles you might consider adding:
+By now you've got the ice cream for your SGD sundae.  Now think about these possibilities:
 \begin{itemize}
-\item Support for sparse matrices (i.e.~situations where your $X$ matrix has a lot of zeros in it).  Remember the speed-ups and reduced memory requirements that are possible by exploiting the sparsity of the $X$ matrix.\footnote{The example below probably won't run if you don't represent the data as a sparse matrix. }
-\item Adding an $\ell^2$ regularizer, i.e.~the addition of a penalty term to the original objective that stabilizes your estimates (which will modify the gradients in a straightforward way).\footnote{Consult the course page for some reading about this idea, if it is unfamiliar.}  This corresponds to optimizing the objective
+\item Support for sparse matrices (i.e.~situations where your $X$ matrix has a lot of zeros in it).  Remember the speed-ups and reduced memory requirements that are possible by exploiting the sparsity of the $X$ matrix.\footnote{The example below probably won't run if you don't represent the data as a sparse matrix. }  A key issue that you'll have to solve is: how do I \emph{iterate efficiently} over the entries in a sparse matrix?  This is intimately related to the way your sparse matrix is stored.  It is efficient to iterate column by column, but not row by row, in a column-oriented sparse matrix.  Similarly, it is efficient to iterate row by row, but not column by column, in a column-oriented sparse matrix.
+\item Adding an $\ell^1$ regularizer, i.e.~the addition of a penalty term to the original objective that stabilizes your estimates (which will modify the gradients in a straightforward way).\footnote{Consult the course page for some reading about this idea, if it is unfamiliar.}  This corresponds to optimizing the objective
 $$
-\tilde{l}(\beta) = l(\beta) + \lambda \Vert \beta \Vert_2^2 \, ,
+\tilde{l}(\beta) = l(\beta) + \lambda \sum_{j=1}^p |\beta_j| \, ,
 $$
-where $\lambda$ is a scalar penalty and $l(\beta)$ is the negative log likelihood.
+where $\lambda$ is a scalar penalty and $l(\beta)$ is the negative log likelihood.  You'll have to modify your gradient calculation here.  Note that derivative of $|x|$ is either $\pm 1$ depending on the sign of $x$.  The exception is at zero, where the gradient is undefined.  But SGD will still work fine if you simply pretend that the derivative of $|x|$ at $x=0$ is 0.
+\item Lazy updates.  If $x_{jt}$ is zero at iteration $t$ of SGD, can you avoid have to actually touch the corresponding $\beta_j$?  This is a huge efficiency improvement if you can figure out how to do it correctly.
 \item Implementation in a compiled language (e.g.~using Rcpp and either RcppArmadillo or RcppEigen if you're working in R).
-\item Streaming data off disk in chunks, so that you don't have to load everything into memory at once.  There are several R packages appropriate for this, e.g. \verb|LaF| or \verb|stream| (there are probably others, maybe even better ones).
+\item Streaming data off disk in chunks, so that you don't have to load everything into memory at once.  There are several R packages appropriate for this, e.g. \verb|readr|, \verb|LaF| or \verb|stream| (there are probably others, maybe even better ones).
 \end{itemize}
 
 Aim for speed.  SGD is supposed to be fast :-)
@@ -155,6 +139,22 @@ Aim for speed.  SGD is supposed to be fast :-)
 Once you've got your code up and running (using either AdaGrad or minibatch line search), apply SGD to fit a logistic regression model to the \href{http://archive.ics.uci.edu/ml/datasets/URL+Reputation}{data here}, on detecting malicious URLs in web traffic.  It has about 2.4 million observations and 3.2 million features (so $p > n$).   Forget about random sampling here---just stream through the data one observation at a time, in the order they sit in the file.\footnote{As a benchmark, my code (which has all the ``sprinkles'' mentioned above except for the last one) takes about 13 seconds on a MacBook Pro to pass through this data set once, once it's been loaded into memory.  It is reasonably efficient, but not super optimized or anything like that.   I'll be very pleased if you can beat this!  I'll have to think of a prize here.}  As a final step, try splitting the data into training and test sets.  Fit the model on the training set, and then make predictions on the testing set.  How well does your model perform?
 
 The course web page gives you some pointers and code for pre-processing this data.  And remember, you can probably learn a lot from your classmates on this one.
+
+
+\subsection{Optional}
+
+
+Another way of thinking about the step size in SGD is using a variant on line search:
+\begin{enumerate}[1.]
+\item At some point during the learning, select a small subsample (a ``minibatch'') of the observations as a calibration set.
+\item Try out various step sizes $\gamma$ on this subsample (using the averaged gradient from this subsample as the search direction), and pick the $\gamma$ that leads to the best fit on the calibration set.
+\item Use this step size for awhile.
+\end{enumerate}
+You then repeat this every so often to refresh the step size, which will end up decaying naturally over time.
+
+Note: this way of choosing the step size based on a minibatch is \textit{almost} exactly the same as line search for regular gradient descent, treating that minibatch as the full data set.  The only difference is that the search direction vector is the \textit{average} gradient contribution for all the observations in the minibatch, rather than the sum of all gradient contributions.  These two vectors have the same direction but different length.  You need the one whose length scales like that of a single $g_t$ vector---and thus the average---to get the right step size for gradient-descent steps based on a single $g_t$.
+
+Feel free to try this if you want, but it's not required.
 
 \end{document}
 

@@ -22,18 +22,18 @@ The [exercises for this unit](exercises01/exercises01-SDS385.pdf) will have you 
 But as we'll see, getting stochastic-gradient descent right is tricky.  We'll learn the basics now, recognize the key issues, and save the more advanced stuff (for addressing those issues) for the next two sets of exercises.  
 
 
-<!-- ## Exercises 3: Better online learning (preliminaries_
+## Exercises 3: Better online learning (preliminaries_
 
 [The goal in this exercise](exercises03/exercises03-SDS385.pdf) is to set the stage for some big improvements to stochastic gradient descent.  To do so, we'll need to revisit our two batch optimizers from before: ordinary gradient descent, and Newton's method.  These exercises will have you implement backtracking line search and the BFGS method for logistic regression.  Both of these ideas will carry forward, with some modifications, to the online-learning setting.  
 
 
 ## Exercises 4: Better online learning (putting it all together)
 
-[I put this description on a separate page](exercises04.md) due to length.  You should aim to have these completed by Wednesday, September 28th.  On Monday, September 26th, we'll have a "lab day" in class, where people can work on the problem, exchange ideas, and share code.  
+[I put this description on a separate page](exercises04.md) due to length.
 
 
 
-
+<!-- 
 ## Exercises 5: Sparsity
 
 [Link here.](exercises05/exercises05-SDS385.pdf)
