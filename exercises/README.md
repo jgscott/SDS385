@@ -33,7 +33,7 @@ But as we'll see, getting stochastic-gradient descent right is tricky.  We'll le
 
 
 
-<!-- 
+
 ## Exercises 5: Sparsity
 
 [Link here.](exercises05/exercises05-SDS385.pdf)
@@ -58,6 +58,7 @@ The following papers treat some of the issues that arise in lasso regression in 
 - [Estimating prediction error](https://people.eecs.berkeley.edu/~jordan/sail/readings/archive/efron_Cp.pdf).  
 
 
+
 ## Exercises 6: the proximal gradient method
 
 [Link here.](exercises06/exercises06-SDS385.pdf)
@@ -76,6 +77,7 @@ In this set of exercises, we begin our study of scalable algorithms that can han
 These exercises are fairly self contained.  Nonetheless, if you want a very detailed reference on the proximal gradient algorithm, and many related algorithms, I highly recommend [this review paper](http://web.stanford.edu/~boyd/papers/prox_algs.html) by Parikh and Boyd.
 
 
+<!-- 
 ## Exercises 7: Introduction to ADMM
 
 ### Reading
