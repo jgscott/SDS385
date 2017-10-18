@@ -17,7 +17,7 @@ system.time(sgd1 <- sparsesgd_logit(tX[1:10, 1:1000], y[1:1000], rep(1,n), eta =
 
 
 
-system.time(sgd1 <- sparsesgd_logit(tX, y, rep(1,n), eta = 2, npass=1, beta0 = init_beta, lambda=1e-8, discount = 0.001))
+system.time(sgd1 <- sparsesgd_logit(tX, y, rep(1,n), eta = 2, npass=2, beta0 = init_beta, lambda=1e-8, discount = 0.0001))
 names(sgd1)
 
 rafalib::splot(1:p, sort(sgd1$beta))

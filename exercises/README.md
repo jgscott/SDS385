@@ -77,7 +77,7 @@ In this set of exercises, we begin our study of scalable algorithms that can han
 These exercises are fairly self contained.  Nonetheless, if you want a very detailed reference on the proximal gradient algorithm, and many related algorithms, I highly recommend [this review paper](http://web.stanford.edu/~boyd/papers/prox_algs.html) by Parikh and Boyd.
 
 
-<!-- 
+
 ## Exercises 7: Introduction to ADMM
 
 ### Reading
@@ -92,6 +92,8 @@ The assignment this week is simple: implement ADMM for fitting the lasso regress
 
 In the exercises to follow, we'll use ADMM again for several other problems, including spatial smoothing.  
 
+
+<!-- 
 
 ## Exercises 8: spatial smoothing at scale  
 

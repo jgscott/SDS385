@@ -103,7 +103,6 @@ SEXP sparsesgd_logit(MapMatd X, VectorXd Y, VectorXd M, double eta, int npass, V
       // if(pass == npass-1) {
       //   loglik += Y[i]*log(yhat) - yhat;
       // }
-
      // Iterate over the active features for this instance
      for (SparseVector<double>::InnerIterator it(x); it; ++it) {
 
