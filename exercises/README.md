@@ -93,16 +93,17 @@ The assignment this week is simple: implement ADMM for fitting the lasso regress
 In the exercises to follow, we'll use ADMM again for several other problems, including spatial smoothing.  
 
 
-<!-- 
 
 ## Exercises 8: spatial smoothing at scale  
 
-[Link here.](exercises08/exercises08-SDS385.pdf)  In this set of exercises, you will extend your knowledge of ADMM by considering the problem of spatial smoothing over large discrete lattices.  The application we consider this week is to data collected from an fMRI experiment.
+[Link here.](exercises08/exercises08-SDS385.pdf)  In this set of exercises, we'll first look at the simplest spatial smoother of all: local averaging.  Then you will extend your knowledge of ADMM by considering the problem of spatial smoothing over large discrete lattices.  The applications we consider are: 1) atmospheric CO2 concentrations, and 2) data collected from an fMRI experiment.
 
 Files:  
-- [Data](../data/fmri_z.csv) 
+- [C02 data](../data/co2.csv) 
+- [fMRI Data](../data/fmri_z.csv) 
 - [a utility R script](../R/makeD2_sparse.R) for constructing the first-difference matrix over a grid graph  
 
+<!-- 
 
 ## Exercises 9: matrix factorization
 

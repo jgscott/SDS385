@@ -62,19 +62,51 @@
 \bigskip
 
 
-In this set of exercises, we'll look at smoothing spatial data collected for discrete areal units.  In discrete spatial-smoothing problems, ``space'' is defined not by distance (like in Euclidean space), but by a neighborhood structure that says which areal units are close to which others.
+In this set of exercises, we'll look at smoothing spatial data.
 
-Specifically, let's say that we have observations $y_i$, each associated with a vertex $s_i \in \mathcal{S}$ in an undirected graph $\mathcal{G}$ with edge set $\mathcal{E}$.  The edge set tells you which sites are neighbors on the graph.  For example, in this set of exercises, we'll be looking at data from an fMRI experiment.  In this case, $s_i$ is the specific brain region (``voxel''), each $y_i$ is a measurement of the brain activity at that voxel, and $\mathcal{E}$ is the edge structure corresponding to a regular grid.
+\section{Kernel smoothing}
 
-The underlying statistical model is
+In spatial smoothing, the underlying statistical model is assumed to look something like this:
 $$
-y_i = x_i + \epsilon_i \, , \quad i = 1, \ldots, n, 
+y(s_i) = x(s_i) + \epsilon(s_i) \, , \quad i = 1, \ldots, n, 
 $$
-where $x_i$ is the true denoised signal, and $\epsilon_i$ is mean-zero error.  Our goal is to estimate $x_i$ in a way that leverages the assumption of spatial smoothness over the underlying graph.
+where $s_i$ is the spatial location of the $i$th data point, $x$ is the ``true'' denoised signal, $y$ is data, and $\epsilon$ is mean-zero error.  Our goal is to estimate $x$ in a way that leverages the assumption of spatial smoothness.
+
+The simplest technique for denoising a spatial signal is called \textit{kernel smoothing}.  Suppose we want to estimate $x(s)$ at some target location $s$.  The kernel-smoothing estimate takes the form of a weighted average of all the points in the data set.
+$$
+\hat{x}(s) = \frac{\sum_{i=1}^n w_i(s, s_i) y(s_i)} {\sum_{i=1}^n w_i(s, s_i)} \, ,
+$$
+where $w(s, s_i)$ is a weighting function that (presumably) gets smaller as $s$ and $s_i$ get further apart.  The question is, how we do choose the weights?
+
+A very common approach is called ``K nearest neighbors,'' where the weight function $w(s, s_i$) takes the value $1/K$ if $s_i$ is one of the $K$ closest points to $s$, and 0 otherwise.  Another common approach is to define the weights in terms of a kernel function.  One example is the Gaussian kernel:
+$$
+w_i(s, s_i; b) = \frac{1}{b} \exp \left\{ -\frac{(s - s_i)^2}{2b^2}  \right\}\, ,
+$$
+which depends upon a bandwidth parameter $b$.  Another example is the quadratic or ``Epanechnikov'' kernel:
+$$
+w_i(s, s_i; b) = \max \left( 0, \frac{3}{4b} \left[ 1 - \frac{(s - s_i)^2}{b^2} \right]  \right) \, ,
+$$
+which has the advantage that it decays to zero beyond a certain distance. You can read more about kernels on Wikipedia: \url{https://en.wikipedia.org/wiki/Kernel_(statistics)}.
+
+The goal of this first section is simple:
+\begin{enumerate}
+\item Download the data on atmospheric CO2 concentration (co2.csv) from the class website, which has latitude, longitude, and CO2.
+\item Visualize it over the surface of the earth.
+\item Use kernel smoothing to estimate a denoised spatial surface, and visualize that surface over the earth.
+\end{enumerate}
+Note: because of the size of the data, you'll want to choose a weighting function that eventually decays to zero.  Beyond that, you have considerable freedom to choose how to proceed here.
+
+Try to write a kernel smoother that is as computationally efficient as possible.
+
 
 \section{Laplacian smoothing}
 
-Recall our discussion of Laplacian smoothing from class, which involved the following matrices defined with respect to the graph $\mathcal{G} = (\mathcal{S}, \mathcal{E})$:
+Kernel smoothing is a ``local'' smoother, in that the estimate at some point only depends upon the immediately surrounding points.  We'll now consider a ``global'' smoother, where the answer at any one point depends on all the data.  Specifically, we'll look at a global smoother collected for discrete areal units.  In discrete spatial-smoothing problems, ``space'' is defined not by distance (like in Euclidean space), but by a neighborhood structure that says which areal units are close to which others.
+
+Say that we have observations $y_i$, each associated with a vertex $s_i \in \mathcal{S}$ in an undirected graph $\mathcal{G}$ with edge set $\mathcal{E}$.  The edge set tells you which sites are neighbors on the graph.  For example, in this set of exercises, we'll be looking at data from an fMRI experiment.  In this case, $s_i$ is the specific brain region (``voxel''), each $y_i$ is a measurement of the brain activity at that voxel, and $\mathcal{E}$ is the edge structure corresponding to a regular grid.  The underlying statistical model is the same: $y(s_i) = x(s_i) + \epsilon(s_i) \, , \quad i = 1, \ldots, n$.
+
+
+Laplacian smoothing involves the following matrices defined with respect to the graph $\mathcal{G} = (\mathcal{S}, \mathcal{E})$:
 \begin{itemize}
 \item $A$, the graph adjacency matrix, which is a square $(0,1)$-valued matrix with zeros on its diagonal, and a 1 in entry $(i,j)$ if vertices $i$ and $j$ have an edge between them.
 \item $W$, the graph degree matrix, which is the diagonal matrix where $w_{ii}$ is the number of neighbors of vertex $i$.
@@ -85,7 +117,7 @@ All of these are sparse matrices---although the graph determines how sparse.
 
 
 \begin{enumerate}[(A)]
-\item Consider the Laplacian smoothing problem:
+\item Consider the \emph{Laplacian smoothing} problem:
 \begin{equation}
 \begin{aligned}
 & \underset{x \in \R^n}{\text{minimize}}
